@@ -1,0 +1,1930 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<nta>
+	<declaration>
+//Synchronisation channels for device securement
+chan secured, unsecured, yes, no, short2, long2;
+
+//Synchronisation channels for password generation
+chan expired1, non_expired1, long1, short1, unused, used, immedaitely, delayed;
+
+//Synchronisation channels for updating
+chan automatic, manual, intermediate, install, postponed, immediate, required, non_required;
+
+//Synchronisation channels for proactive awareness template
+chan able, unable, reported, unreported, complied1, violated1;
+
+</declaration>
+	<template>
+		<name>DeviceSecurement1</name>
+		<location id="id0" x="68" y="-142">
+			<name x="20" y="-174">device_unlocked</name>
+		</location>
+		<location id="id1" x="-340" y="-142">
+			<name x="-388" y="-174">device_opened</name>
+		</location>
+		<location id="id2" x="-340" y="-238">
+			<name x="-365" y="-272">disabled</name>
+		</location>
+		<location id="id3" x="68" y="-238">
+			<name x="42" y="-272">enabled</name>
+		</location>
+		<location id="id4" x="-136" y="-238">
+			<name x="-184" y="-270">device_protection</name>
+		</location>
+		<location id="id5" x="-136" y="-340">
+			<name x="-152" y="-372">start</name>
+		</location>
+		<init ref="id5"/>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id1"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id0"/>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="-59" y="-238">secured?</label>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id2"/>
+			<label kind="synchronisation" x="-272" y="-238">unsecured?</label>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id4"/>
+		</transition>
+	</template>
+	<template>
+		<name>DeviceSecurement2</name>
+		<location id="id6" x="-238" y="68">
+			<name x="-270" y="36">turned_off</name>
+		</location>
+		<location id="id7" x="170" y="68">
+			<name x="138" y="36">turned_on</name>
+		</location>
+		<location id="id8" x="-34" y="68">
+			<name x="-82" y="36">screen_locking</name>
+		</location>
+		<location id="id9" x="-34" y="-34">
+			<name x="-50" y="-66">start</name>
+		</location>
+		<init ref="id9"/>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id6"/>
+			<label kind="synchronisation" x="-146" y="68">no?</label>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id7"/>
+			<label kind="synchronisation" x="66" y="68">yes?</label>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id8"/>
+		</transition>
+	</template>
+	<template>
+		<name>DeviceSecurement3</name>
+		<location id="id10" x="0" y="-102">
+			<name x="-17" y="-136">start</name>
+		</location>
+		<location id="id11" x="0" y="0">
+			<name x="-25" y="-34">timeout</name>
+		</location>
+		<location id="id12" x="204" y="0">
+			<name x="187" y="-34">short</name>
+		</location>
+		<location id="id13" x="-204" y="0">
+			<name x="-221" y="-34">long</name>
+		</location>
+		<init ref="id10"/>
+		<transition>
+			<source ref="id11"/>
+			<target ref="id13"/>
+			<label kind="synchronisation" x="-119" y="0">long2?</label>
+		</transition>
+		<transition>
+			<source ref="id11"/>
+			<target ref="id12"/>
+			<label kind="synchronisation" x="85" y="0">short2?</label>
+		</transition>
+		<transition>
+			<source ref="id10"/>
+			<target ref="id11"/>
+		</transition>
+	</template>
+	<template>
+		<name x="5" y="5">Updating1</name>
+		<location id="id14" x="-272" y="-102">
+			<name x="-304" y="-134">manually</name>
+		</location>
+		<location id="id15" x="136" y="-102">
+			<name x="96" y="-134">automatically</name>
+		</location>
+		<location id="id16" x="-68" y="-102">
+			<name x="-132" y="-134">updating_mechanism</name>
+		</location>
+		<location id="id17" x="-68" y="-204">
+			<name x="-84" y="-236">start</name>
+		</location>
+		<init ref="id17"/>
+		<transition>
+			<source ref="id16"/>
+			<target ref="id15"/>
+			<label kind="synchronisation" x="-1" y="-102">automatic?</label>
+			<nail x="120" y="-102"/>
+		</transition>
+		<transition>
+			<source ref="id16"/>
+			<target ref="id14"/>
+			<label kind="synchronisation" x="-195" y="-102">manual?</label>
+			<nail x="-241" y="-102"/>
+		</transition>
+		<transition>
+			<source ref="id17"/>
+			<target ref="id16"/>
+		</transition>
+	</template>
+	<template>
+		<name>Updating2</name>
+		<location id="id18" x="204" y="-102">
+			<name x="195" y="-136">long</name>
+		</location>
+		<location id="id19" x="-204" y="-102">
+			<name x="-221" y="-136">short</name>
+		</location>
+		<location id="id20" x="0" y="-102">
+			<name x="-48" y="-134">time_to_update</name>
+		</location>
+		<location id="id21" x="0" y="-204">
+			<name x="-10" y="-238">start</name>
+		</location>
+		<init ref="id21"/>
+		<transition>
+			<source ref="id21"/>
+			<target ref="id20"/>
+		</transition>
+		<transition>
+			<source ref="id20"/>
+			<target ref="id18"/>
+			<label kind="synchronisation" x="76" y="-102">postponed?</label>
+		</transition>
+		<transition>
+			<source ref="id20"/>
+			<target ref="id19"/>
+			<label kind="synchronisation" x="-136" y="-102">immediate?</label>
+		</transition>
+	</template>
+	<template>
+		<name>Updating3</name>
+		<location id="id22" x="-272" y="-306">
+			<name x="-304" y="-338">after_awhile</name>
+		</location>
+		<location id="id23" x="136" y="-306">
+			<name x="104" y="-338">right_away</name>
+		</location>
+		<location id="id24" x="-68" y="-408">
+			<name x="-85" y="-442">start</name>
+		</location>
+		<location id="id25" x="-68" y="-306">
+			<name x="-116" y="-338">time_to_reboot</name>
+		</location>
+		<init ref="id24"/>
+		<transition>
+			<source ref="id25"/>
+			<target ref="id22"/>
+			<label kind="synchronisation" x="-195" y="-306">delayed?</label>
+		</transition>
+		<transition>
+			<source ref="id25"/>
+			<target ref="id23"/>
+			<label kind="synchronisation" x="0" y="-306">immedaitely?</label>
+		</transition>
+		<transition>
+			<source ref="id24"/>
+			<target ref="id25"/>
+		</transition>
+	</template>
+	<template>
+		<name>PasswordGeneration1</name>
+		<location id="id26" x="-192" y="-136">
+			<name x="-216" y="-168">expired</name>
+		</location>
+		<location id="id27" x="192" y="-136">
+			<name x="168" y="-168">non_expired</name>
+		</location>
+		<location id="id28" x="0" y="-136">
+			<name x="-51" y="-170">password_age</name>
+		</location>
+		<location id="id29" x="0" y="-238">
+			<name x="-16" y="-270">start</name>
+		</location>
+		<init ref="id29"/>
+		<transition>
+			<source ref="id28"/>
+			<target ref="id26"/>
+			<label kind="synchronisation" x="-128" y="-136">expired1?</label>
+		</transition>
+		<transition>
+			<source ref="id28"/>
+			<target ref="id27"/>
+			<label kind="synchronisation" x="48" y="-136">non_expired1?</label>
+		</transition>
+		<transition>
+			<source ref="id29"/>
+			<target ref="id28"/>
+			<nail x="0" y="-152"/>
+		</transition>
+	</template>
+	<template>
+		<name>PasswordGeneration2</name>
+		<location id="id30" x="238" y="-170">
+			<name x="221" y="-204">long</name>
+		</location>
+		<location id="id31" x="-170" y="-170">
+			<name x="-186" y="-202">short</name>
+		</location>
+		<location id="id32" x="34" y="-170">
+			<name x="-17" y="-204">password_length</name>
+		</location>
+		<location id="id33" x="34" y="-272">
+			<name x="18" y="-304">start</name>
+		</location>
+		<init ref="id33"/>
+		<transition>
+			<source ref="id32"/>
+			<target ref="id30"/>
+			<label kind="synchronisation" x="102" y="-170">long1?</label>
+		</transition>
+		<transition>
+			<source ref="id32"/>
+			<target ref="id31"/>
+			<label kind="synchronisation" x="-93" y="-170">short1?</label>
+		</transition>
+		<transition>
+			<source ref="id33"/>
+			<target ref="id32"/>
+		</transition>
+	</template>
+	<template>
+		<name>PasswordGeneration3</name>
+		<location id="id34" x="-306" y="-442">
+			<name x="-338" y="-474">used_before</name>
+		</location>
+		<location id="id35" x="102" y="-442">
+			<name x="62" y="-474">unused_before</name>
+		</location>
+		<location id="id36" x="-102" y="-544">
+			<name x="-119" y="-578">start</name>
+		</location>
+		<location id="id37" x="-102" y="-442">
+			<name x="-168" y="-472">password_reusability</name>
+		</location>
+		<init ref="id36"/>
+		<transition>
+			<source ref="id37"/>
+			<target ref="id34"/>
+			<label kind="synchronisation" x="-221" y="-442">used?</label>
+		</transition>
+		<transition>
+			<source ref="id37"/>
+			<target ref="id35"/>
+			<label kind="synchronisation" x="-25" y="-442">unused?</label>
+		</transition>
+		<transition>
+			<source ref="id36"/>
+			<target ref="id37"/>
+		</transition>
+	</template>
+	<template>
+		<name x="5" y="5">ProactiveAwareness1</name>
+		<declaration>
+</declaration>
+		<location id="id38" x="-238" y="34">
+			<name x="-248" y="4">no</name>
+		</location>
+		<location id="id39" x="170" y="34">
+			<name x="160" y="4">yes</name>
+		</location>
+		<location id="id40" x="-34" y="34">
+			<name x="-68" y="0">spot_signs</name>
+		</location>
+		<location id="id41" x="-34" y="-68">
+			<name x="-50" y="-100">start</name>
+		</location>
+		<init ref="id41"/>
+		<transition>
+			<source ref="id40"/>
+			<target ref="id38"/>
+			<label kind="synchronisation" x="-161" y="34">unable?</label>
+		</transition>
+		<transition>
+			<source ref="id40"/>
+			<target ref="id39"/>
+			<label kind="synchronisation" x="51" y="34">able?</label>
+		</transition>
+		<transition>
+			<source ref="id41"/>
+			<target ref="id40"/>
+		</transition>
+	</template>
+	<template>
+		<name>ProactiveAwareness2</name>
+		<location id="id42" x="-204" y="-34">
+			<name x="-214" y="-64">no</name>
+		</location>
+		<location id="id43" x="204" y="-34">
+			<name x="194" y="-64">yes</name>
+		</location>
+		<location id="id44" x="0" y="-34">
+			<name x="-40" y="-66">report_threat</name>
+		</location>
+		<location id="id45" x="0" y="-128">
+			<name x="-16" y="-160">start</name>
+		</location>
+		<init ref="id45"/>
+		<transition>
+			<source ref="id44"/>
+			<target ref="id42"/>
+			<label kind="synchronisation" x="-136" y="-34">unreported?</label>
+		</transition>
+		<transition>
+			<source ref="id44"/>
+			<target ref="id43"/>
+			<label kind="synchronisation" x="64" y="-34">reported?</label>
+		</transition>
+		<transition>
+			<source ref="id45"/>
+			<target ref="id44"/>
+		</transition>
+	</template>
+	<template>
+		<name>ProactiveAwareness3</name>
+		<location id="id46" x="-238" y="-34">
+			<name x="-263" y="-68">violated</name>
+		</location>
+		<location id="id47" x="170" y="-34">
+			<name x="144" y="-68">complied</name>
+		</location>
+		<location id="id48" x="-34" y="-34">
+			<name x="-85" y="-68">security_policy</name>
+		</location>
+		<location id="id49" x="-34" y="-138">
+			<name x="-44" y="-168">start</name>
+		</location>
+		<init ref="id49"/>
+		<transition>
+			<source ref="id48"/>
+			<target ref="id46"/>
+			<label kind="synchronisation" x="-154" y="-34">violated1?</label>
+		</transition>
+		<transition>
+			<source ref="id48"/>
+			<target ref="id47"/>
+			<label kind="synchronisation" x="38" y="-34">complied1?</label>
+		</transition>
+		<transition>
+			<source ref="id49"/>
+			<target ref="id48"/>
+		</transition>
+	</template>
+	<template>
+		<name>User1</name>
+		<declaration>//User John exhibits good security behavior in device securement, password generation, proactive awareness and updating.
+
+//Time to reboot device (minutes)
+int T1 = 1;
+
+//Password age (days)
+int D1 = 30;
+
+//Password length (characters)
+int L = 16;
+
+//Time to lock screen after inacivaty (minutes)
+int T2 = 5;</declaration>
+		<location id="id50" x="-68" y="2074">
+			<name x="-78" y="2044">end</name>
+		</location>
+		<location id="id51" x="-68" y="1972">
+			<name x="-116" y="1940">device_locked</name>
+		</location>
+		<location id="id52" x="-68" y="1870">
+			<name x="-92" y="1838">timeout</name>
+		</location>
+		<location id="id53" x="-68" y="1768">
+			<name x="-116" y="1736">screen_locking</name>
+		</location>
+		<location id="id54" x="-68" y="1666">
+			<name x="-116" y="1634">device_inactive</name>
+		</location>
+		<location id="id55" x="-68" y="1564">
+			<name x="-110" y="1530">security_policy</name>
+		</location>
+		<location id="id56" x="-68" y="1462">
+			<name x="-108" y="1430">report_threat</name>
+		</location>
+		<location id="id57" x="-68" y="1258">
+			<name x="-102" y="1224">spot_signs</name>
+		</location>
+		<location id="id58" x="-68" y="1156">
+			<name x="-140" y="1124">perform_computer_task</name>
+		</location>
+		<location id="id59" x="-68" y="1054">
+			<name x="-132" y="1022">password_reusability</name>
+		</location>
+		<location id="id60" x="-68" y="850">
+			<name x="-124" y="818">renew_password</name>
+		</location>
+		<location id="id61" x="-68" y="748">
+			<name x="-116" y="716">password_age</name>
+		</location>
+		<location id="id62" x="-68" y="646">
+			<name x="-116" y="614">login_to_account</name>
+		</location>
+		<location id="id63" x="-68" y="340">
+			<name x="-124" y="308">required_reboot</name>
+		</location>
+		<location id="id64" x="-68" y="238">
+			<name x="-132" y="206">updating_mechanism</name>
+		</location>
+		<location id="id65" x="-68" y="1360">
+			<name x="-116" y="1328">threat_identified</name>
+		</location>
+		<location id="id66" x="-68" y="952">
+			<name x="-132" y="920">password_length</name>
+		</location>
+		<location id="id67" x="-68" y="544">
+			<name x="-116" y="512">device_rebooted</name>
+		</location>
+		<location id="id68" x="-68" y="442">
+			<name x="-116" y="410">time_to_reboot</name>
+		</location>
+		<location id="id69" x="-68" y="136">
+			<name x="-124" y="104">available_updates</name>
+		</location>
+		<location id="id70" x="-68" y="34">
+			<name x="-116" y="2">device_protection</name>
+		</location>
+		<location id="id71" x="-68" y="-68">
+			<name x="-124" y="-100">turn_on_device</name>
+		</location>
+		<location id="id72" x="-68" y="-170">
+			<name x="-84" y="-202">start</name>
+		</location>
+		<init ref="id72"/>
+		<transition>
+			<source ref="id51"/>
+			<target ref="id50"/>
+		</transition>
+		<transition>
+			<source ref="id52"/>
+			<target ref="id51"/>
+		</transition>
+		<transition>
+			<source ref="id53"/>
+			<target ref="id52"/>
+			<label kind="guard" x="-195" y="1785">T2&gt;=1 &amp;&amp; T2&lt;=15</label>
+			<label kind="synchronisation" x="-153" y="1802">short2!</label>
+		</transition>
+		<transition>
+			<source ref="id54"/>
+			<target ref="id53"/>
+			<label kind="synchronisation" x="-102" y="1683">yes!</label>
+		</transition>
+		<transition>
+			<source ref="id55"/>
+			<target ref="id54"/>
+		</transition>
+		<transition>
+			<source ref="id56"/>
+			<target ref="id55"/>
+			<label kind="synchronisation" x="-144" y="1479">complied1!</label>
+		</transition>
+		<transition>
+			<source ref="id65"/>
+			<target ref="id56"/>
+			<label kind="synchronisation" x="-136" y="1377">reported!</label>
+		</transition>
+		<transition>
+			<source ref="id57"/>
+			<target ref="id65"/>
+		</transition>
+		<transition>
+			<source ref="id58"/>
+			<target ref="id57"/>
+			<label kind="synchronisation" x="-110" y="1173">able!</label>
+		</transition>
+		<transition>
+			<source ref="id59"/>
+			<target ref="id58"/>
+		</transition>
+		<transition>
+			<source ref="id66"/>
+			<target ref="id59"/>
+			<label kind="synchronisation" x="-127" y="969">unused!</label>
+		</transition>
+		<transition>
+			<source ref="id60"/>
+			<target ref="id66"/>
+			<label kind="guard" x="-178" y="867">L&gt;=8 and L&lt;=16</label>
+			<label kind="synchronisation" x="-153" y="884">long1!</label>
+		</transition>
+		<transition>
+			<source ref="id61"/>
+			<target ref="id60"/>
+		</transition>
+		<transition>
+			<source ref="id62"/>
+			<target ref="id61"/>
+			<label kind="guard" x="-204" y="663">D1&gt;=30 &amp;&amp; D1&lt;=90</label>
+			<label kind="synchronisation" x="-187" y="680">non_expired1!</label>
+		</transition>
+		<transition>
+			<source ref="id67"/>
+			<target ref="id62"/>
+		</transition>
+		<transition>
+			<source ref="id63"/>
+			<target ref="id68"/>
+			<label kind="guard" x="-195" y="357">T1&gt;=0 &amp;&amp; T1&lt;=10</label>
+			<label kind="synchronisation" x="-170" y="374">immedaitely!</label>
+		</transition>
+		<transition>
+			<source ref="id64"/>
+			<target ref="id63"/>
+		</transition>
+		<transition>
+			<source ref="id70"/>
+			<target ref="id69"/>
+		</transition>
+		<transition>
+			<source ref="id68"/>
+			<target ref="id67"/>
+		</transition>
+		<transition>
+			<source ref="id69"/>
+			<target ref="id64"/>
+			<label kind="synchronisation" x="-136" y="153">automatic!</label>
+		</transition>
+		<transition>
+			<source ref="id71"/>
+			<target ref="id70"/>
+			<label kind="synchronisation" x="-127" y="-51">secured!</label>
+		</transition>
+		<transition>
+			<source ref="id72"/>
+			<target ref="id71"/>
+		</transition>
+	</template>
+	<template>
+		<name>User2</name>
+		<declaration>//User Sara exhibits poor security behavior in device securement, password generation, proactive awareness and updating.
+
+//Time to update manually (days)
+int D1 = 10;
+
+//Time to reboot device (minutes)
+int T1 = 360;
+
+//Password age (days)
+int D2 = 99;
+
+//Password length (characters)
+int L = 4;
+</declaration>
+		<location id="id73" x="-68" y="1224">
+			<name x="-102" y="1190">spot_signs</name>
+		</location>
+		<location id="id74" x="-68" y="1122">
+			<name x="-144" y="1094">perform_computer_task</name>
+		</location>
+		<location id="id75" x="-68" y="1020">
+			<name x="-132" y="988">password_reusability</name>
+		</location>
+		<location id="id76" x="-68" y="918">
+			<name x="-119" y="884">password_length</name>
+		</location>
+		<location id="id77" x="-68" y="816">
+			<name x="-119" y="790">password_age</name>
+		</location>
+		<location id="id78" x="-68" y="714">
+			<name x="-116" y="682">login_to_account</name>
+		</location>
+		<location id="id79" x="-68" y="612">
+			<name x="-116" y="580">device_rebooted</name>
+		</location>
+		<location id="id80" x="-68" y="510">
+			<name x="-108" y="478">time_to_reboot</name>
+		</location>
+		<location id="id81" x="-68" y="408">
+			<name x="-127" y="374">required_reboot</name>
+		</location>
+		<location id="id82" x="-68" y="306">
+			<name x="-116" y="274">time_to_update</name>
+		</location>
+		<location id="id83" x="-68" y="204">
+			<name x="-136" y="170">updating_mechanism</name>
+		</location>
+		<location id="id84" x="-68" y="102">
+			<name x="-124" y="70">available_updates</name>
+		</location>
+		<location id="id85" x="-68" y="0">
+			<name x="-116" y="-32">device_protection</name>
+		</location>
+		<location id="id86" x="-68" y="-102">
+			<name x="-124" y="-134">turn_on_device</name>
+		</location>
+		<location id="id87" x="-68" y="-204">
+			<name x="-84" y="-236">start</name>
+		</location>
+		<location id="id88" x="-68" y="1836">
+			<name x="-116" y="1804">device_inactive</name>
+		</location>
+		<location id="id89" x="-68" y="1734">
+			<name x="-119" y="1700">security_policy</name>
+		</location>
+		<location id="id90" x="-68" y="1428">
+			<name x="-108" y="1396">report_threat</name>
+		</location>
+		<location id="id91" x="-68" y="1326">
+			<name x="-116" y="1294">threat_identified</name>
+		</location>
+		<location id="id92" x="-68" y="1530">
+			<name x="-119" y="1496">security_incident</name>
+		</location>
+		<location id="id93" x="-68" y="1632">
+			<name x="-136" y="1599">investigate_incident</name>
+		</location>
+		<location id="id94" x="-68" y="2142">
+			<name x="-78" y="2112">end</name>
+		</location>
+		<location id="id95" x="-68" y="2040">
+			<name x="-116" y="2008">device_unlocked</name>
+		</location>
+		<location id="id96" x="-68" y="1938">
+			<name x="-110" y="1904">screen_locking</name>
+		</location>
+		<init ref="id87"/>
+		<transition>
+			<source ref="id96"/>
+			<target ref="id95"/>
+		</transition>
+		<transition>
+			<source ref="id88"/>
+			<target ref="id96"/>
+			<label kind="synchronisation" x="-93" y="1853">no!</label>
+		</transition>
+		<transition>
+			<source ref="id93"/>
+			<target ref="id89"/>
+			<label kind="synchronisation" x="-136" y="1649">violated1!</label>
+		</transition>
+		<transition>
+			<source ref="id92"/>
+			<target ref="id93"/>
+		</transition>
+		<transition>
+			<source ref="id73"/>
+			<target ref="id91"/>
+		</transition>
+		<transition>
+			<source ref="id74"/>
+			<target ref="id73"/>
+			<label kind="synchronisation" x="-110" y="1139">able!</label>
+		</transition>
+		<transition>
+			<source ref="id75"/>
+			<target ref="id74"/>
+		</transition>
+		<transition>
+			<source ref="id76"/>
+			<target ref="id75"/>
+			<label kind="synchronisation" x="-110" y="935">used!</label>
+		</transition>
+		<transition>
+			<source ref="id77"/>
+			<target ref="id76"/>
+			<label kind="guard" x="-119" y="833">L==4</label>
+			<label kind="synchronisation" x="-127" y="850">short1!</label>
+		</transition>
+		<transition>
+			<source ref="id78"/>
+			<target ref="id77"/>
+			<label kind="guard" x="-119" y="731">D2&gt;90</label>
+			<label kind="synchronisation" x="-136" y="748">expired1!</label>
+		</transition>
+		<transition>
+			<source ref="id79"/>
+			<target ref="id78"/>
+		</transition>
+		<transition>
+			<source ref="id80"/>
+			<target ref="id79"/>
+		</transition>
+		<transition>
+			<source ref="id81"/>
+			<target ref="id80"/>
+			<label kind="guard" x="-127" y="425">T1&gt;10</label>
+			<label kind="synchronisation" x="-136" y="442">delayed!</label>
+		</transition>
+		<transition>
+			<source ref="id82"/>
+			<target ref="id81"/>
+		</transition>
+		<transition>
+			<source ref="id83"/>
+			<target ref="id82"/>
+			<label kind="guard" x="-127" y="221">D1&gt;=7</label>
+			<label kind="synchronisation" x="-144" y="238">postponed!</label>
+			<nail x="-68" y="290"/>
+		</transition>
+		<transition>
+			<source ref="id85"/>
+			<target ref="id84"/>
+		</transition>
+		<transition>
+			<source ref="id84"/>
+			<target ref="id83"/>
+			<label kind="synchronisation" x="-127" y="119">manual!</label>
+		</transition>
+		<transition>
+			<source ref="id86"/>
+			<target ref="id85"/>
+			<label kind="synchronisation" x="-144" y="-85">unsecured!</label>
+		</transition>
+		<transition>
+			<source ref="id87"/>
+			<target ref="id86"/>
+		</transition>
+		<transition>
+			<source ref="id89"/>
+			<target ref="id88"/>
+		</transition>
+		<transition>
+			<source ref="id90"/>
+			<target ref="id92"/>
+		</transition>
+		<transition>
+			<source ref="id91"/>
+			<target ref="id90"/>
+			<label kind="synchronisation" x="-153" y="1343">unreported!</label>
+		</transition>
+		<transition>
+			<source ref="id95"/>
+			<target ref="id94"/>
+		</transition>
+	</template>
+	<template>
+		<name>User3</name>
+		<declaration>//User Tom exhibits good security behavior in device securement, password generation, and poor security behavior in proactive awareness and updating.
+
+//Time to update manually (days)
+int D1 = 4;
+
+//Time to reboot device (minutes)
+int T1 = 180;
+
+//Password age (days)
+int D2 = 40;
+
+//Password length (characters)
+int L = 12;
+
+//Time to lock screen after inacivaty (minutes)
+int T2 = 10;</declaration>
+		<location id="id97" x="374" y="2244">
+			<name x="364" y="2214">end</name>
+		</location>
+		<location id="id98" x="374" y="2142">
+			<name x="326" y="2110">device_locked</name>
+		</location>
+		<location id="id99" x="374" y="2040">
+			<name x="349" y="2006">timeout</name>
+		</location>
+		<location id="id100" x="374" y="1938">
+			<name x="326" y="1906">screen_locking</name>
+		</location>
+		<location id="id101" x="374" y="1836">
+			<name x="326" y="1804">device_inactive</name>
+		</location>
+		<location id="id102" x="374" y="1734">
+			<name x="323" y="1700">security_policy</name>
+		</location>
+		<location id="id103" x="374" y="1428">
+			<name x="334" y="1396">report_threat</name>
+		</location>
+		<location id="id104" x="374" y="1224">
+			<name x="340" y="1190">spot_signs</name>
+		</location>
+		<location id="id105" x="374" y="1122">
+			<name x="302" y="1090">perform_computer_task</name>
+		</location>
+		<location id="id106" x="374" y="1020">
+			<name x="310" y="988">password_reusability</name>
+		</location>
+		<location id="id107" x="374" y="816">
+			<name x="318" y="784">renew_password</name>
+		</location>
+		<location id="id108" x="374" y="714">
+			<name x="326" y="682">password_age</name>
+		</location>
+		<location id="id109" x="374" y="612">
+			<name x="326" y="580">login_to_account</name>
+		</location>
+		<location id="id110" x="374" y="306">
+			<name x="318" y="274">required_reboot</name>
+		</location>
+		<location id="id111" x="374" y="1326">
+			<name x="315" y="1292">threat_unidentified</name>
+		</location>
+		<location id="id112" x="374" y="918">
+			<name x="310" y="886">password_length</name>
+		</location>
+		<location id="id113" x="374" y="510">
+			<name x="326" y="478">device_rebooted</name>
+		</location>
+		<location id="id114" x="374" y="408">
+			<name x="326" y="376">time_to_reboot</name>
+		</location>
+		<location id="id115" x="374" y="0">
+			<name x="318" y="-32">available_updates</name>
+		</location>
+		<location id="id116" x="374" y="-102">
+			<name x="326" y="-134">device_protection</name>
+		</location>
+		<location id="id117" x="374" y="-204">
+			<name x="318" y="-236">turn_on_device</name>
+		</location>
+		<location id="id118" x="374" y="-306">
+			<name x="358" y="-338">start</name>
+		</location>
+		<location id="id119" x="374" y="204">
+			<name x="326" y="172">time_to_update</name>
+		</location>
+		<location id="id120" x="374" y="102">
+			<name x="306" y="68">updating_mechanism</name>
+		</location>
+		<location id="id121" x="374" y="1530">
+			<name x="323" y="1496">security_incident</name>
+		</location>
+		<location id="id122" x="374" y="1632">
+			<name x="315" y="1598">investigate_incident</name>
+		</location>
+		<init ref="id118"/>
+		<transition>
+			<source ref="id121"/>
+			<target ref="id122"/>
+		</transition>
+		<transition>
+			<source ref="id103"/>
+			<target ref="id121"/>
+		</transition>
+		<transition>
+			<source ref="id119"/>
+			<target ref="id110"/>
+		</transition>
+		<transition>
+			<source ref="id98"/>
+			<target ref="id97"/>
+		</transition>
+		<transition>
+			<source ref="id99"/>
+			<target ref="id98"/>
+		</transition>
+		<transition>
+			<source ref="id100"/>
+			<target ref="id99"/>
+			<label kind="guard" x="247" y="1955">T2&gt;=1 &amp;&amp; T2&lt;=15</label>
+			<label kind="synchronisation" x="280" y="1972">short2!</label>
+		</transition>
+		<transition>
+			<source ref="id101"/>
+			<target ref="id100"/>
+			<label kind="synchronisation" x="340" y="1853">yes!</label>
+		</transition>
+		<transition>
+			<source ref="id102"/>
+			<target ref="id101"/>
+		</transition>
+		<transition>
+			<source ref="id122"/>
+			<target ref="id102"/>
+			<label kind="synchronisation" x="306" y="1649">violated1!</label>
+			<nail x="374" y="1717"/>
+		</transition>
+		<transition>
+			<source ref="id111"/>
+			<target ref="id103"/>
+			<label kind="synchronisation" x="289" y="1343">unreported!</label>
+		</transition>
+		<transition>
+			<source ref="id104"/>
+			<target ref="id111"/>
+		</transition>
+		<transition>
+			<source ref="id105"/>
+			<target ref="id104"/>
+			<label kind="synchronisation" x="323" y="1139">unable!</label>
+		</transition>
+		<transition>
+			<source ref="id106"/>
+			<target ref="id105"/>
+		</transition>
+		<transition>
+			<source ref="id112"/>
+			<target ref="id106"/>
+			<label kind="synchronisation" x="315" y="935">unused!</label>
+		</transition>
+		<transition>
+			<source ref="id107"/>
+			<target ref="id112"/>
+			<label kind="guard" x="264" y="833">L&gt;=8 and L&lt;=16</label>
+			<label kind="synchronisation" x="289" y="850">long1!</label>
+		</transition>
+		<transition>
+			<source ref="id108"/>
+			<target ref="id107"/>
+		</transition>
+		<transition>
+			<source ref="id109"/>
+			<target ref="id108"/>
+			<label kind="guard" x="238" y="629">D2&gt;=30 &amp;&amp; D2&lt;=90</label>
+			<label kind="synchronisation" x="255" y="646">non_expired1!</label>
+		</transition>
+		<transition>
+			<source ref="id113"/>
+			<target ref="id109"/>
+		</transition>
+		<transition>
+			<source ref="id110"/>
+			<target ref="id114"/>
+			<label kind="guard" x="315" y="323">T1&gt;10</label>
+			<label kind="synchronisation" x="306" y="340">delayed!</label>
+		</transition>
+		<transition>
+			<source ref="id116"/>
+			<target ref="id115"/>
+		</transition>
+		<transition>
+			<source ref="id114"/>
+			<target ref="id113"/>
+		</transition>
+		<transition>
+			<source ref="id115"/>
+			<target ref="id120"/>
+			<label kind="synchronisation" x="315" y="17">manual!</label>
+		</transition>
+		<transition>
+			<source ref="id117"/>
+			<target ref="id116"/>
+			<label kind="synchronisation" x="315" y="-187">secured!</label>
+		</transition>
+		<transition>
+			<source ref="id118"/>
+			<target ref="id117"/>
+		</transition>
+		<transition>
+			<source ref="id120"/>
+			<target ref="id119"/>
+			<label kind="guard" x="297" y="119">D1&gt;1</label>
+			<label kind="synchronisation" x="272" y="136">postponed!</label>
+		</transition>
+	</template>
+	<template>
+		<name>User4</name>
+		<declaration>//User Bella exhibits poor security behavior in device securement, password generation, and good security behavior in proactive awareness and updating.
+
+//Time to update manually (days)
+int D1 = 0;
+
+//Time to reboot device (minutes)
+int T1 = 5;
+
+//Password age (days)
+int D2 = 180;
+
+//Time to lock screen after inacivaty (minutes)
+int T2 = 60;</declaration>
+		<location id="id123" x="-68" y="2176">
+			<name x="-78" y="2146">end</name>
+		</location>
+		<location id="id124" x="-68" y="2074">
+			<name x="-116" y="2042">device_locked</name>
+		</location>
+		<location id="id125" x="-68" y="1972">
+			<name x="-92" y="1940">timeout</name>
+		</location>
+		<location id="id126" x="-68" y="1870">
+			<name x="-116" y="1838">screen_locking</name>
+		</location>
+		<location id="id127" x="-68" y="1768">
+			<name x="-116" y="1736">device_inactive</name>
+		</location>
+		<location id="id128" x="-68" y="1666">
+			<name x="-119" y="1632">security_policy</name>
+		</location>
+		<location id="id129" x="-68" y="1564">
+			<name x="-108" y="1532">report_threat</name>
+		</location>
+		<location id="id130" x="-68" y="1360">
+			<name x="-102" y="1326">spot_signs</name>
+		</location>
+		<location id="id131" x="-68" y="1258">
+			<name x="-140" y="1226">perform_computer_task</name>
+		</location>
+		<location id="id132" x="-68" y="1156">
+			<name x="-132" y="1124">password_reusability</name>
+		</location>
+		<location id="id133" x="-68" y="952">
+			<name x="-124" y="920">renew_password</name>
+		</location>
+		<location id="id134" x="-68" y="850">
+			<name x="-116" y="818">password_age</name>
+		</location>
+		<location id="id135" x="-68" y="748">
+			<name x="-116" y="716">login_to_account</name>
+		</location>
+		<location id="id136" x="-68" y="442">
+			<name x="-124" y="410">required_reboot</name>
+		</location>
+		<location id="id137" x="-68" y="238">
+			<name x="-132" y="206">updating_mechanism</name>
+		</location>
+		<location id="id138" x="-68" y="1462">
+			<name x="-116" y="1430">threat_identified</name>
+		</location>
+		<location id="id139" x="-68" y="1054">
+			<name x="-119" y="1020">password_length</name>
+		</location>
+		<location id="id140" x="-68" y="646">
+			<name x="-116" y="614">device_rebooted</name>
+		</location>
+		<location id="id141" x="-68" y="544">
+			<name x="-116" y="512">time_to_reboot</name>
+		</location>
+		<location id="id142" x="-68" y="136">
+			<name x="-124" y="104">available_updates</name>
+		</location>
+		<location id="id143" x="-68" y="34">
+			<name x="-116" y="2">device_protection</name>
+		</location>
+		<location id="id144" x="-68" y="-68">
+			<name x="-124" y="-100">turn_on_device</name>
+		</location>
+		<location id="id145" x="-68" y="-170">
+			<name x="-84" y="-202">start</name>
+		</location>
+		<location id="id146" x="-68" y="340">
+			<name x="-119" y="306">time_to_update</name>
+		</location>
+		<init ref="id145"/>
+		<transition>
+			<source ref="id146"/>
+			<target ref="id136"/>
+		</transition>
+		<transition>
+			<source ref="id137"/>
+			<target ref="id146"/>
+			<label kind="guard" x="-187" y="255">D1&gt;=0 &amp;&amp; D1&lt;=1</label>
+			<label kind="synchronisation" x="-161" y="272">immediate!</label>
+		</transition>
+		<transition>
+			<source ref="id124"/>
+			<target ref="id123"/>
+		</transition>
+		<transition>
+			<source ref="id125"/>
+			<target ref="id124"/>
+		</transition>
+		<transition>
+			<source ref="id126"/>
+			<target ref="id125"/>
+			<label kind="guard" x="-127" y="1887">T2&gt;15</label>
+			<label kind="synchronisation" x="-127" y="1904">long2!</label>
+		</transition>
+		<transition>
+			<source ref="id127"/>
+			<target ref="id126"/>
+			<label kind="synchronisation" x="-102" y="1785">yes!</label>
+		</transition>
+		<transition>
+			<source ref="id128"/>
+			<target ref="id127"/>
+		</transition>
+		<transition>
+			<source ref="id129"/>
+			<target ref="id128"/>
+			<label kind="synchronisation" x="-144" y="1581">complied1!</label>
+		</transition>
+		<transition>
+			<source ref="id138"/>
+			<target ref="id129"/>
+			<label kind="synchronisation" x="-136" y="1479">reported!</label>
+		</transition>
+		<transition>
+			<source ref="id130"/>
+			<target ref="id138"/>
+		</transition>
+		<transition>
+			<source ref="id131"/>
+			<target ref="id130"/>
+			<label kind="synchronisation" x="-110" y="1275">able!</label>
+		</transition>
+		<transition>
+			<source ref="id132"/>
+			<target ref="id131"/>
+		</transition>
+		<transition>
+			<source ref="id139"/>
+			<target ref="id132"/>
+		</transition>
+		<transition>
+			<source ref="id133"/>
+			<target ref="id139"/>
+		</transition>
+		<transition>
+			<source ref="id134"/>
+			<target ref="id133"/>
+		</transition>
+		<transition>
+			<source ref="id135"/>
+			<target ref="id134"/>
+			<label kind="guard" x="-127" y="765">D2&gt;90</label>
+			<label kind="synchronisation" x="-136" y="782">expired1!</label>
+		</transition>
+		<transition>
+			<source ref="id140"/>
+			<target ref="id135"/>
+		</transition>
+		<transition>
+			<source ref="id136"/>
+			<target ref="id141"/>
+			<label kind="guard" x="-195" y="459">T1&gt;=0 &amp;&amp; T1&lt;=10</label>
+			<label kind="synchronisation" x="-170" y="476">immedaitely!</label>
+		</transition>
+		<transition>
+			<source ref="id143"/>
+			<target ref="id142"/>
+		</transition>
+		<transition>
+			<source ref="id141"/>
+			<target ref="id140"/>
+		</transition>
+		<transition>
+			<source ref="id142"/>
+			<target ref="id137"/>
+			<label kind="synchronisation" x="-127" y="153">manual!</label>
+		</transition>
+		<transition>
+			<source ref="id144"/>
+			<target ref="id143"/>
+			<label kind="synchronisation" x="-144" y="-51">unsecured!</label>
+		</transition>
+		<transition>
+			<source ref="id145"/>
+			<target ref="id144"/>
+		</transition>
+	</template>
+	<template>
+		<name>User5</name>
+		<declaration>//User Zac exhibits combination of good and poor security behavior in device securement and proactive awareness.
+
+//Time to lock screen after inacivaty (minutes)
+int T1 = 30;</declaration>
+		<location id="id147" x="-68" y="1258">
+			<name x="-78" y="1228">end</name>
+		</location>
+		<location id="id148" x="-68" y="1156">
+			<name x="-116" y="1124">device_locked</name>
+		</location>
+		<location id="id149" x="-68" y="1054">
+			<name x="-92" y="1022">timeout</name>
+		</location>
+		<location id="id150" x="-68" y="952">
+			<name x="-116" y="920">screen_locking</name>
+		</location>
+		<location id="id151" x="-68" y="850">
+			<name x="-116" y="818">device_inactive</name>
+		</location>
+		<location id="id152" x="-68" y="748">
+			<name x="-119" y="714">security_policy</name>
+		</location>
+		<location id="id153" x="-68" y="442">
+			<name x="-108" y="410">report_threat</name>
+		</location>
+		<location id="id154" x="-68" y="238">
+			<name x="-102" y="204">spot_signs</name>
+		</location>
+		<location id="id155" x="-68" y="136">
+			<name x="-140" y="104">perform_computer_task</name>
+		</location>
+		<location id="id156" x="-68" y="340">
+			<name x="-127" y="306">threat_unidentified</name>
+		</location>
+		<location id="id157" x="-68" y="34">
+			<name x="-116" y="2">device_protection</name>
+		</location>
+		<location id="id158" x="-68" y="-68">
+			<name x="-124" y="-100">turn_on_device</name>
+		</location>
+		<location id="id159" x="-68" y="-170">
+			<name x="-84" y="-202">start</name>
+		</location>
+		<location id="id160" x="-68" y="544">
+			<name x="-119" y="510">security_incident</name>
+		</location>
+		<location id="id161" x="-68" y="646">
+			<name x="-136" y="612">investigate_incident</name>
+		</location>
+		<init ref="id159"/>
+		<transition>
+			<source ref="id161"/>
+			<target ref="id152"/>
+			<label kind="synchronisation" x="-144" y="663">complied1!</label>
+		</transition>
+		<transition>
+			<source ref="id160"/>
+			<target ref="id161"/>
+		</transition>
+		<transition>
+			<source ref="id153"/>
+			<target ref="id160"/>
+		</transition>
+		<transition>
+			<source ref="id157"/>
+			<target ref="id155"/>
+		</transition>
+		<transition>
+			<source ref="id148"/>
+			<target ref="id147"/>
+		</transition>
+		<transition>
+			<source ref="id149"/>
+			<target ref="id148"/>
+		</transition>
+		<transition>
+			<source ref="id150"/>
+			<target ref="id149"/>
+			<label kind="guard" x="-127" y="969">T1&gt;15</label>
+			<label kind="synchronisation" x="-127" y="986">long2!</label>
+		</transition>
+		<transition>
+			<source ref="id151"/>
+			<target ref="id150"/>
+			<label kind="synchronisation" x="-102" y="867">yes!</label>
+		</transition>
+		<transition>
+			<source ref="id152"/>
+			<target ref="id151"/>
+		</transition>
+		<transition>
+			<source ref="id156"/>
+			<target ref="id153"/>
+			<label kind="synchronisation" x="-153" y="357">unreported!</label>
+		</transition>
+		<transition>
+			<source ref="id154"/>
+			<target ref="id156"/>
+		</transition>
+		<transition>
+			<source ref="id155"/>
+			<target ref="id154"/>
+			<label kind="synchronisation" x="-127" y="153">unable!</label>
+		</transition>
+		<transition>
+			<source ref="id158"/>
+			<target ref="id157"/>
+			<label kind="synchronisation" x="-127" y="-51">secured!</label>
+		</transition>
+		<transition>
+			<source ref="id159"/>
+			<target ref="id158"/>
+		</transition>
+	</template>
+	<template>
+		<name>User6</name>
+		<declaration>//User Zoe exhibits combination of good and poor security behavior in updating and password generation.
+
+//Time to reboot device (minutes)
+int T1 = 480;
+
+//Password age (days)
+int D1 = 30;
+
+//Password length (characters)
+int L = 4;
+</declaration>
+		<location id="id162" x="-68" y="714">
+			<name x="-132" y="682">password_reusability</name>
+		</location>
+		<location id="id163" x="-68" y="612">
+			<name x="-119" y="578">password_length</name>
+		</location>
+		<location id="id164" x="-68" y="510">
+			<name x="-119" y="484">password_age</name>
+		</location>
+		<location id="id165" x="-68" y="408">
+			<name x="-116" y="376">login_to_account</name>
+		</location>
+		<location id="id166" x="-68" y="306">
+			<name x="-119" y="272">device_rebooted</name>
+		</location>
+		<location id="id167" x="-68" y="204">
+			<name x="-108" y="172">time_to_reboot</name>
+		</location>
+		<location id="id168" x="-68" y="102">
+			<name x="-127" y="68">required_reboot</name>
+		</location>
+		<location id="id169" x="-68" y="0">
+			<name x="-136" y="-34">updating_mechanism</name>
+		</location>
+		<location id="id170" x="-68" y="-102">
+			<name x="-124" y="-134">available_updates</name>
+		</location>
+		<location id="id171" x="-68" y="-204">
+			<name x="-84" y="-236">start</name>
+		</location>
+		<location id="id172" x="-68" y="816">
+			<name x="-78" y="786">end</name>
+		</location>
+		<init ref="id171"/>
+		<transition>
+			<source ref="id162"/>
+			<target ref="id172"/>
+		</transition>
+		<transition>
+			<source ref="id163"/>
+			<target ref="id162"/>
+			<label kind="synchronisation" x="-127" y="629">unused!</label>
+		</transition>
+		<transition>
+			<source ref="id164"/>
+			<target ref="id163"/>
+			<label kind="guard" x="-119" y="527">L==4</label>
+			<label kind="synchronisation" x="-127" y="544">short1!</label>
+		</transition>
+		<transition>
+			<source ref="id165"/>
+			<target ref="id164"/>
+			<label kind="guard" x="-204" y="425">D1&gt;=30 &amp;&amp; D1&lt;=90</label>
+			<label kind="synchronisation" x="-178" y="442">non_expired1!</label>
+		</transition>
+		<transition>
+			<source ref="id166"/>
+			<target ref="id165"/>
+		</transition>
+		<transition>
+			<source ref="id167"/>
+			<target ref="id166"/>
+		</transition>
+		<transition>
+			<source ref="id168"/>
+			<target ref="id167"/>
+			<label kind="guard" x="-127" y="119">T1&gt;10</label>
+			<label kind="synchronisation" x="-136" y="136">delayed!</label>
+		</transition>
+		<transition>
+			<source ref="id169"/>
+			<target ref="id168"/>
+			<nail x="-68" y="86"/>
+		</transition>
+		<transition>
+			<source ref="id171"/>
+			<target ref="id170"/>
+		</transition>
+		<transition>
+			<source ref="id170"/>
+			<target ref="id169"/>
+			<label kind="synchronisation" x="-144" y="-85">automatic!</label>
+		</transition>
+	</template>
+	<system>// Template instantiations.
+
+John = User1();
+Sara = User2();
+Tom = User3();
+Bella = User4();
+Zac = User5();
+Zoe = User6();
+
+device_protection = DeviceSecurement1();
+screen_locking = DeviceSecurement2();
+timeout = DeviceSecurement3();
+
+
+password_age = PasswordGeneration1();
+password_length = PasswordGeneration2();
+password_reusability = PasswordGeneration3();
+
+updating_mechanism = Updating1();
+time_to_update = Updating2();
+time_to_reboot = Updating3();
+
+spot_signs = ProactiveAwareness1();
+report_threat = ProactiveAwareness2();
+security_policy = ProactiveAwareness3();
+
+// List of processes to be composed into a system.
+system device_protection, screen_locking, timeout, password_age, password_length, password_reusability,
+updating_mechanism, time_to_update, time_to_reboot, spot_signs, report_threat, security_policy, 
+John, Sara, Tom, Bella, Zac, Zoe;</system>
+	<queries>
+		<query>
+			<formula>E&lt;&gt; (Zoe.password_reusability and password_reusability.used_before)</formula>
+			<comment>User Zoe exhibits poor security behavior in password generation, where she chose new password that has been used before for this account.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Zoe.password_reusability and password_reusability.unused_before)</formula>
+			<comment>User Zoe exhibits good security behavior in password generation, where she chose new password that is used for the first time for this account.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Zoe.password_length and Zoe.L&gt;=8 and Zoe.L&lt;=16 and password_length.long)</formula>
+			<comment>User Zoe exhibits good security behavior in password generation, where she chose her new password to be long enough and complex.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Zoe.password_length and Zoe.L==4 and password_length.short)</formula>
+			<comment>User Zoe exhibits poor security behavior in password generation, where she chose her new password to be short and simple.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Zoe.password_age and Zoe.D1&gt;90 and password_age.expired)</formula>
+			<comment>User Zoe exhibits poor security behavior in password generation, where her current password is expired,
+and the last time it have been changed was more than 90 days ago.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Zoe.password_age and Zoe.D1==30 and password_age.non_expired)</formula>
+			<comment>User Zoe exhibits good security behavior in password generation, where her current password is not expired,
+and the last time it have been changed was 30 days ago.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Zoe.time_to_reboot and Zoe.T1&gt;=1 and Zoe.T1&lt;=10 and time_to_reboot.right_away)</formula>
+			<comment>User Zoe exhibits good security behavior in updating, when she took between 1 and 10 minutes to reboot the device after the new updates were installed.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Zoe.time_to_reboot and Zoe.T1 == 480 and time_to_reboot.after_awhile)</formula>
+			<comment>User Zoe exhibits poor security behavior in updating, when she took up to 8 hours to reboot the device after the new updates were installed.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Zoe.updating_mechanism and updating_mechanism.manually)</formula>
+			<comment>User Zoe exhibits poor security behavior in updating, where she chose to install new updates manually.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Zoe.updating_mechanism and updating_mechanism.automatically)</formula>
+			<comment>User Zoe exhibits good security behavior in updating, where she chose to install new updates automaically.</comment>
+		</query>
+		<query>
+			<formula></formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Zac.timeout and Zac.T1&gt;=1 and Zac.T1&lt;=15 and timeout.short)</formula>
+			<comment>User Zac exhibits good security behavior in device securement, when he chose to lock the device automatically after 1 to 15 minutes of inactivity.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Zac.timeout and Zac.T1==30 and timeout.long)</formula>
+			<comment>User Zac exhibits poor security behavior in device securement, when he chose to lock the device automatically after 30 minutes of inactivity.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Zac.screen_locking and screen_locking.turned_off)</formula>
+			<comment>User Zac exhibits poor security behavior in device securement, when he turned off automatic screen-locking.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Zac.screen_locking and screen_locking.turned_on)</formula>
+			<comment>User Zac exhibits good security behavior in device securement, when he turned on automatic screen-locking.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Zac.security_policy and security_policy.violated)</formula>
+			<comment>User Zac exhibits poor security behavior in proactive awareness, when he acted contrary to the security policies.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Zac.security_policy and security_policy.complied)</formula>
+			<comment>User Zac exhibits good security behavior in proactive awareness, when he acted according to the security policies.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Zac.report_threat and report_threat.yes)</formula>
+			<comment>User Zac exhibits good security behavior in proactive awareness, when he report the security threat to the IT department.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Zac.report_threat and report_threat.no)</formula>
+			<comment>User Zac exhibits poor security behavior in proactive awareness, when he did not report the security threat to the IT department.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Zac.spot_signs and spot_signs.yes)</formula>
+			<comment>User Zac exhibits good security behavior in proactive awareness, when he was able to spot suspicious signs of some security threat.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Zac.spot_signs and spot_signs.no)</formula>
+			<comment>User Zac exhibits poor security behavior in proactive awareness, when he was unable to spot suspicious signs of some security threat.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Zac.device_protection and device_protection.disabled)</formula>
+			<comment>User Zac exhibits poor security behavior in device securement, where he disabled device protection feature.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Zac.device_protection and device_protection.enabled)</formula>
+			<comment>User Zac exhibits good security behavior in device securement, where he enabled device protection feature.</comment>
+		</query>
+		<query>
+			<formula></formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Bella.timeout and Bella.T2&gt;=1 and Bella.T2&lt;=15 and timeout.short)</formula>
+			<comment>User Bella exhibits good security behavior in device securement, when she chose to lock the device automatically after 1 to 15 minutes of inactivity.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Bella.timeout and Bella.T2==60 and timeout.long)</formula>
+			<comment>User Bella exhibits poor security behavior in device securement, when she chose to lock the device automatically after 60 minutes of inactivity.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Bella.screen_locking and screen_locking.turned_off)</formula>
+			<comment>User Bella exhibits poor security behavior in device securement, when she turned off automatic screen-locking.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Bella.screen_locking and screen_locking.turned_on)</formula>
+			<comment>User Bella exhibits good security behavior in device securement, when she turned on automatic screen-locking.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Bella.security_policy and security_policy.violated)</formula>
+			<comment>User Bella exhibits poor security behavior in proactive awareness, when she acted contrary to the security policies.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Bella.security_policy and security_policy.complied)</formula>
+			<comment>User Bella exhibits good security behavior in proactive awareness, when she acted according to the security policies.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Bella.report_threat and report_threat.no)</formula>
+			<comment>User Bella exhibits poor security behavior in proactive awareness, when she did not report the security threat to the IT department.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Bella.report_threat and report_threat.yes)</formula>
+			<comment>User Bella exhibits good security behavior in proactive awareness, when she reported the security threat to the IT department.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Bella.spot_signs and spot_signs.no)</formula>
+			<comment>User Bella exhibits poor security behavior in proactive awareness, when she was unable to spot suspicious signs of some security threat.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Bella.spot_signs and spot_signs.yes)</formula>
+			<comment>User Bella exhibits good security behavior in proactive awareness, when she was able to spot suspicious signs of some security threat.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Bella.password_reusability and password_reusability.used_before)</formula>
+			<comment>User Bella exhibits poor security behavior in password generation, where she chose new password that has been used before for this account.
+(Bella skipped renewing her current expired password).</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Bella.password_reusability and password_reusability.unused_before)</formula>
+			<comment>User Bella exhibits good security behavior in password generation, where she chose new password that is used for the first time for this account.
+(Bella skipped renewing her current expired password).</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Bella.password_length and password_length.short)</formula>
+			<comment>User Bella exhibits poor security behavior in password generation, where she chose her new password to be short and simple.
+(Bella skipped renewing her current expired password).</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Bella.password_length and password_length.long)</formula>
+			<comment>User Bella exhibits good security behavior in password generation, where she chose her new password to be long enough and complex.
+(Bella skipped renewing her current expired password).</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Bella.password_age and Bella.D2&gt;=30 and Bella.D2&lt;=90 and password_age.non_expired)</formula>
+			<comment>User Bella exhibits good security behavior in password generation, where her current password is not expired,
+and the last time it have been changed was in the period between 30 and 90 days.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Bella.password_age and Bella.D2==180 and password_age.expired)</formula>
+			<comment>User Bella exhibits poor security behavior in password generation, where her account password is expired,
+and the last time it have been changed was 180 days ago.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Bella.time_to_reboot and Bella.T1&gt;10 and time_to_reboot.after_awhile)</formula>
+			<comment>User Bella exhibits poor security behavior in updating, when she took more than 10 minutes to reboot the device after the new updates were installed.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Bella.time_to_reboot and Bella.T1==5 and time_to_reboot.right_away)</formula>
+			<comment>User Bella exhibits good security behavior in updating, when she took up to 5 minute to reboot the device after the new updates were installed.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Bella.time_to_update and Bella.D1&gt;1 and time_to_update.long)</formula>
+			<comment>User Bella exhibits poor security behavior in updating, when she took more than 1 day to install the new updates.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Bella.time_to_update and Bella.D1==0 and time_to_update.short)</formula>
+			<comment>User Bella exhibits good security behavior in updating, when she took no time to install the new updates.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Bella.updating_mechanism and updating_mechanism.automatically)</formula>
+			<comment>User Bella exhibits good security behavior in updating, where she chose to install the new updates automaically.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Bella.updating_mechanism and updating_mechanism.manually)</formula>
+			<comment>User Bella exhibits good security behavior in updating, where she chose to install new updates manually.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Bella.device_protection and device_protection.enabled)</formula>
+			<comment>User Bella exhibits good security behavior in device securement, where she enabled device protection feature.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Bella.device_protection and device_protection.disabled)</formula>
+			<comment>User Bella exhibits poor security behavior in device securement, where she disabled device protection feature.</comment>
+		</query>
+		<query>
+			<formula></formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Tom.timeout and Tom.T2&gt;15 and timeout.long)</formula>
+			<comment>User Tom exhibits poor security behavior in device securement, when he chose to lock the device after more than 15 minutes of inactivity.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Tom.timeout and Tom.T2==10 and timeout.short)</formula>
+			<comment>User Tom exhibits good security behavior in device securement, when he chose to lock the device after 10 minutes of inactivity.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Tom.screen_locking and screen_locking.turned_off)</formula>
+			<comment>User Tom exhibits poor security behavior in device securement, when he turned off automatic screen-locking.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Tom.screen_locking and screen_locking.turned_on)</formula>
+			<comment>User Tom exhibits good security behavior in device securement, when he turned on automatic screen-locking.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Tom.security_policy and security_policy.complied)</formula>
+			<comment>User Tom exhibits good security behavior in proactive awareness, when he acted according to the security policies.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Tom.security_policy and security_policy.violated)</formula>
+			<comment>User Tom exhibits poor security behavior in proactive awareness, when he acted contrary to the security policies due to his lack of awareness.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Tom.report_threat and report_threat.yes)</formula>
+			<comment>User Tom exhibits good security behavior in proactive awareness, when he reported the security threat to the IT department.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Tom.report_threat and report_threat.no)</formula>
+			<comment>User Tom exhibits poor security behavior in proactive awareness, when he did not report the security threat to the IT department.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Tom.spot_signs and spot_signs.yes)</formula>
+			<comment>User Tom exhibits good security behavior in proactive awareness, when he was able to spot suspicious signs of some security threat.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Tom.spot_signs and spot_signs.no)</formula>
+			<comment>User Tom exhibits poor security behavior in proactive awareness, when he was unable to spot suspicious signs of some security threat.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Tom.password_reusability and password_reusability.used_before)</formula>
+			<comment>User Tom exhibits poor security behavior in password generation, where he chose new password that has been used before for this account.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Tom.password_reusability and password_reusability.unused_before)</formula>
+			<comment>User Tom exhibits good security behavior in password generation, where he chose new password that is used for the first time for this account.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Tom.password_length and Tom.L==4 and password_length.short)</formula>
+			<comment>User Tom exhibits poor security behavior in password generation, where he chose his new password to be short and simple.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Tom.password_length and Tom.L&gt;=8 and Tom.L&lt;=16 and password_length.long)</formula>
+			<comment>User Tom exhibits good security behavior in password generation, where he chose his new password to be long enough and complex.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Tom.password_age and Tom.D2&gt;90 and password_age.expired)</formula>
+			<comment>User Tom exhibits poor security behavior in password generation, where his current password is expired,
+and the last time it have been changed was more than 90 days ago.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Tom.password_age and Tom.D2==40 and password_age.non_expired)</formula>
+			<comment>User Tom exhibits good security behavior in password generation, where his current password is not expired,
+and the last time it have been changed was 40 days.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Tom.time_to_reboot and Tom.T1&gt;=1 and Tom.T1&lt;=10 and time_to_reboot.right_away)</formula>
+			<comment>User Tom exhibits good security behavior in updating, when he took between 1 and 10 minutes to reboot the device after the new updates were installed.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Tom.time_to_reboot and Tom.T1==180 and time_to_reboot.after_awhile)</formula>
+			<comment>User Tom exhibits somewhat poor security behavior in updating, when he took up to 3 hours to reboot the device after the new updates were installed.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Tom.time_to_update and Tom.D1&lt;=1 and time_to_update.short)</formula>
+			<comment>User Tom exhibits good security behavior in updating, when he installed the new updates within 1 day only.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Tom.time_to_update and Tom.D1==4 and time_to_update.long)</formula>
+			<comment>User Tom exhibits somewhat poor security behavior in updating, when he took up to 4 days to install the new updates.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Tom.updating_mechanism and updating_mechanism.automatically)</formula>
+			<comment>User Tom exhibits good security behavior in updating, where he chose to install the new updates automaically.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Tom.updating_mechanism and updating_mechanism.manually)</formula>
+			<comment>User Tom exhibits somewhat poor security behavior in updating, where he chose to install new updates manually.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Tom.device_protection and device_protection.disabled)</formula>
+			<comment>User Tom exhibits poor security behavior in device securement, where he disabled device protection feature.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Tom.device_protection and device_protection.enabled)</formula>
+			<comment>User Tom exhibits good security behavior in device securement, where he enabled device protection feature.</comment>
+		</query>
+		<query>
+			<formula></formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Sara.screen_locking and screen_locking.turned_on)</formula>
+			<comment>User Sara exhibits good security behavior in device securement, when she turned on automatic screen-locking.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Sara.screen_locking and screen_locking.turned_off)</formula>
+			<comment>User Sara exhibits poor security behavior in device securement, when she turned off automatic screen-locking.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Sara.security_policy and security_policy.complied)</formula>
+			<comment>User Sara exhibits good security behavior in proactive awareness, when she acted according to the security policies.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Sara.security_policy and security_policy.violated)</formula>
+			<comment>User Sara exhibits poor security behavior in proactive awareness, when she acted contrary to the security policies.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Sara.report_threat and report_threat.yes)</formula>
+			<comment>User Sara exhibits good security behavior in proactive awareness, when she reported the security threat to the IT department.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Sara.report_threat and report_threat.no)</formula>
+			<comment>User Sara exhibits poor security behavior in proactive awareness, when she did not report the security threat to the IT department.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Sara.spot_signs and spot_signs.no)</formula>
+			<comment>User Sara exhibits poor security behavior in proactive awareness, when she was unable to spot suspicious signs of some security threat.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Sara.spot_signs and spot_signs.yes)</formula>
+			<comment>User Sara exhibits good security behavior in proactive awareness, when she was able to spot suspicious signs of some security threat.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Sara.password_reusability and password_reusability.unused_before)</formula>
+			<comment>User Sara exhibits good security behavior in password generation, where she chose new password that is used for the first time for this account.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Sara.password_reusability and password_reusability.used_before)</formula>
+			<comment>User Sara exhibits poor security behavior in password generation, where she chose new password that has been used before for this account.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Sara.password_length and Sara.L&gt;=8 and Sara.L&lt;=16 and password_length.long)</formula>
+			<comment>User Sara exhibits good security behavior in password generation, where she chose her new password to be long enough and complex.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Sara.password_length and Sara.L==4 and password_length.short)</formula>
+			<comment>User Sara exhibits poor security behavior in password generation, where she chose her new password to be short and simple.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Sara.password_age and Sara.D2&gt;=30 and Sara.D2&lt;=90 and password_age.non_expired)</formula>
+			<comment>User Sara exhibits good security behavior in password generation, where her current password is not expired,
+and the last time it have been changed in the period between 30 and 90 days.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Sara.password_age and Sara.D2==99 and password_age.expired)</formula>
+			<comment>User Sara exhibits poor security behavior in password generation, where her account password is expired,
+and the last time it have been changed was 99 days ago.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Sara.time_to_reboot and Sara.T1&gt;=1 and Sara.T1&lt;=10 and time_to_reboot.right_away)</formula>
+			<comment>User Sara exhibits good security behavior in updating, when she took between 1 and 10 minutes to reboot the device after the new updates were installed.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Sara.time_to_reboot and Sara.T1 == 360 and time_to_reboot.after_awhile)</formula>
+			<comment>User Sara exhibits poor security behavior in updating, when she took up to 6 hours to reboot the device after the new updates were installed.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Sara.time_to_update and Sara.D1&lt;=1 and time_to_update.short)</formula>
+			<comment>User Sara exhibits good security behavior in updating, when she installed the new updates within 1 day only.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Sara.time_to_update and Sara.D1==10 and time_to_update.long)</formula>
+			<comment>User Sara exhibits poor security behavior in updating, when she took up to 10 days to install the new updates.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Sara.updating_mechanism and updating_mechanism.automatically)</formula>
+			<comment>User Sara exhibits good security behavior in updating, where she chose to install the new updates automaically.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Sara.updating_mechanism and updating_mechanism.manually)</formula>
+			<comment>User Sara exhibits poor security behavior in updating, where she chose to install the new updates manually.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Sara.device_protection and device_protection.enabled)</formula>
+			<comment>User Sara exhibits good security behavior in device securement, where she enabled device protection feature.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (Sara.device_protection and device_protection.disabled)</formula>
+			<comment>User Sara exhibits poor security behavior in device securement, where she disabled device protection feature.</comment>
+		</query>
+		<query>
+			<formula></formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (John.timeout and John.T2&gt;15 and timeout.long)</formula>
+			<comment>User John exhibits poor security behavior in device securement, when he chose to lock the device after more than 15 minutes of inactivity.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (John.timeout and John.T2==5 and timeout.short)</formula>
+			<comment>User John exhibits good security behavior in device securement, when he chose to lock the device after 5 minutes of inactivity.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (John.screen_locking and screen_locking.turned_off)</formula>
+			<comment>User John exhibits poor security behavior in device securement, when he turned off automatic screen-locking.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (John.screen_locking and screen_locking.turned_on)</formula>
+			<comment>User John exhibits good security behavior in device securement, when he turned on automatic screen-locking.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (John.security_policy and security_policy.violated)</formula>
+			<comment>User John exhibits poor security behavior in proactive awareness, when he acted contrary to the security policies.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (John.security_policy and security_policy.complied)</formula>
+			<comment>User John exhibits good security behavior in proactive awareness, when he acted according to the security policies.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (John.report_threat and report_threat.no)</formula>
+			<comment>User John exhibits poor security behavior in proactive awareness, when he did not report the security threat to the IT department.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (John.report_threat and report_threat.yes)</formula>
+			<comment>User John exhibits good security behavior in proactive awareness, when he reported the security threat to the IT department.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (John.spot_signs and spot_signs.no)</formula>
+			<comment>User John exhibits poor security behavior in proactive awareness, when he was unable to spot suspicious signs of some security threat.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (John.spot_signs and spot_signs.yes)</formula>
+			<comment>User John exhibits good security behavior in proactive awareness, when he was able to spot suspicious signs of some security threat.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (John.password_reusability and password_reusability.used_before)</formula>
+			<comment>User John exhibits poor security behavior in password generation, where he chose new password that has been used before for this account.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (John.password_reusability and password_reusability.unused_before)</formula>
+			<comment>User John exhibits good security behavior in password generation, where he chose new password that is used for the first time for this account.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (John.password_length and John.L==4 and password_length.short)</formula>
+			<comment>User John exhibits poor security behavior in password generation, where he chose his new password to be short and simple.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (John.password_length and John.L&gt;=8 and John.L&lt;=16 and password_length.long)</formula>
+			<comment>User John exhibits good security behavior in password generation, where he chose his new password to be long enough and complex.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (John.password_age and John.D1&gt;90 and password_age.expired)</formula>
+			<comment>User John exhibits poor security behavior in password generation, where his current password is expired,
+and the last time it have been changed was more than 90 days ago.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (John.password_age and John.D1==30 and password_age.non_expired)</formula>
+			<comment>User John exhibits good security behavior in password generation, where his current password is not expired,
+and the last time it have been changed was 30 days ago.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (John.time_to_reboot and John.T1&gt;10 and time_to_reboot.after_awhile)</formula>
+			<comment>User John exhibits poor security behavior in updating, when he took more than 10 minutes to reboot the device after the new updates were installed.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (John.time_to_reboot and John.T1==1 and time_to_reboot.right_away)</formula>
+			<comment>User John exhibits good security behavior in updating, when he took only 1 minute to reboot the device after the new updates were installed.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (John.updating_mechanism and updating_mechanism.manually)</formula>
+			<comment>User John exhibits poor security behavior in updating, where he chose to install new updates manually.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (John.updating_mechanism and updating_mechanism.automatically)</formula>
+			<comment>User John exhibits good security behavior in updating, where he chose to install new updates automaically.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (John.device_protection and device_protection.disabled)</formula>
+			<comment>User John exhibits poor security behavior in device securement, where he disabled device protection feature.</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (John.device_protection and device_protection.enabled)</formula>
+			<comment>User John exhibits good security behavior in device securement, where he enabled device protection feature.</comment>
+		</query>
+	</queries>
+</nta>
